@@ -326,8 +326,8 @@ class PlayerController(Controller):
 			if move.normalize().x < 0 and move.normalize().x > -1 and move.normalize().y < 0 and move.normalize().y > -1:
 				angle = 135
 
-			entity.rotated_sprite = entity.rotate_center(entity.sprite, entity.sprite.get_rect(), -entity.angle)
-			entity.angle = angle
+			# entity.rotated_sprite = entity.rotate_center(entity.sprite, entity.sprite.get_rect(), -entity.angle)
+			# entity.angle = angle
 
 			if 0 < new_position.x < width - entity.width and 0 < new_position.y < height - entity.height:
 				entity.position = new_position
@@ -348,8 +348,8 @@ class PlayerController(Controller):
 	def get_aim_direction(self, entity, position):
 		target_dir = (position - entity.get_centre()).normalize()
 
-		entity.rotated_turret_sprite = entity.rotate_center(entity.turret_sprite, entity.turret_sprite.get_rect(), -entity.aim_angle)
-		entity.aim_angle = -(((math.atan2(target_dir.y, target_dir.x) * (180/math.pi))) % 360)
+		# entity.rotated_turret_sprite = entity.rotate_center(entity.turret_sprite, entity.turret_sprite.get_rect(), -entity.aim_angle)
+		# entity.aim_angle = -(((math.atan2(target_dir.y, target_dir.x) * (180/math.pi))) % 360)
 
 		if type(entity.weapons[entity.current_weapon]) is MissileBarrage:
 			return entity.position + (target_dir).normalize()

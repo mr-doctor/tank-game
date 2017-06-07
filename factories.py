@@ -69,7 +69,7 @@ def create_player(position, loadout):
 
 	return Tank(position, [
 		controllers.PlayerController(speed=4.2),
-	], max_health=config.Player.health, high_colour=(0, 0, 255), low_colour=(0, 0, 255), weapons=chosen_weapons, is_player=True, size=60, collision_radius=30)
+	], max_health=config.Player.health, high_colour=(0, 0, 255), low_colour=(0, 0, 255), weapons=chosen_weapons, is_player=True, size=30, collision_radius=30)
 
 def create_healer_enemy(position):
 	return Tank(position, [

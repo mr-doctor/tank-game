@@ -50,15 +50,16 @@ class Tank(Entity):
 			self.handle_fire()
 
 	def draw(self, screen):
-		self.sprite = transform.scale(self.sprite, (self.width, self.height))
-		self.turret_sprite = transform.scale(self.turret_sprite, (135, 27))
-		old_rect = self.sprite.get_rect(center = (self.position.x + self.width/2, self.position.y + self.height/2))
-		rotate_rect = self.turret_sprite.get_rect(center = ((self.position.x + 25), (self.position.y + 29)))
-
-		self.rotated_turret_sprite, old_turret_rect = self.rotate_center(self.turret_sprite, rotate_rect, self.aim_angle)
-		self.rotated_sprite, new_rect = self.rotate_center(self.sprite, old_rect, self.angle)
-		screen.blit(self.rotated_sprite, new_rect)
-		screen.blit(self.rotated_turret_sprite, old_turret_rect)
+		# self.sprite = transform.scale(self.sprite, (self.width, self.height))
+		# self.turret_sprite = transform.scale(self.turret_sprite, (135, 27))
+		# old_rect = self.sprite.get_rect(center = (self.position.x + self.width/2, self.position.y + self.height/2))
+		# rotate_rect = self.turret_sprite.get_rect(center = ((self.position.x + 25), (self.position.y + 29)))
+		#
+		# self.rotated_turret_sprite, old_turret_rect = self.rotate_center(self.turret_sprite, rotate_rect, self.aim_angle)
+		# self.rotated_sprite, new_rect = self.rotate_center(self.sprite, old_rect, self.angle)
+		# screen.blit(self.rotated_sprite, new_rect)
+		# screen.blit(self.rotated_turret_sprite, old_turret_rect)
+		draw.rect(screen, self.high_colour, (self.position.x, self.position.y, self.width, self.height))
 
 		if self.is_player:
 			self.draw_health_bar(screen)
@@ -87,7 +88,8 @@ class Tank(Entity):
 		draw.rect(screen, colour, (self.position.x + self.width / 2 - 26, self.position.y - 13, health_percent * 50, 5))
 
 	def get_turret_sprite(self):
-		return self.ss.image_at(self.ss.turret_sheet, (0, 0, 90, 18), (0, 255, 0))
+		pass
+		# return self.ss.image_at(self.ss.turret_sheet, (0, 0, 90, 18), (0, 255, 0))
 
 	def should_collide(self, other):
 		if (other.projectile or other.hitscan) and other.owner is not self:

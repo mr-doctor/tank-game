@@ -39,7 +39,8 @@ class Entity:
 		pass
 
 	def get_sprite(self):
-		return self.ss.image_at(self.ss.body_sheet, self.sprite_coords[0], self.sprite_coords[2])
+		pass
+		# return self.ss.image_at(self.ss.body_sheet, self.sprite_coords[0], self.sprite_coords[2])
 
 	def view_world(self, world):
 		pass
