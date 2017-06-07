@@ -6,12 +6,12 @@ class Player:
 	health = 80
 	max_secondary_bullets = 7
 
-width, height = 1920, 1080
+width, height = 1366, 768
 num_enemies = 8
 num_motherships = 3
 num_light_enemies = 7
 num_shotgunner_enemies = 4
-num_beamer_enemies = 4
+num_beamer_enemies = 0
 num_healer_enemies = 0
 num_scanner_enemies = 2
 #num_enemies = 0
