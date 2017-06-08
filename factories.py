@@ -47,6 +47,7 @@ def create_beamer_enemy(position):
 		controllers.EnemyDieController()
 	], max_health=45, high_colour=(121, 45, 216), low_colour=(102, 21, 86), size=30, collision_radius=20)
 
+
 def create_player(position, loadout):
 	all_weapons = [
 		weapons.BasicGun(),

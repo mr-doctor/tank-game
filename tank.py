@@ -61,8 +61,7 @@ class Tank(Entity):
 		# screen.blit(self.rotated_turret_sprite, old_turret_rect)
 		draw.rect(screen, self.high_colour, (self.position.x, self.position.y, self.width, self.height))
 
-		if self.is_player:
-			self.draw_health_bar(screen)
+		self.draw_health_bar(screen)
 
 	def rotate_by_angle(self, image, angle, rotations={}):
 		r = rotations.get(image, 0) + angle
@@ -76,8 +75,8 @@ class Tank(Entity):
 
 	def draw_health_bar(self, screen):
 		health_percent = self.health / self.max_health
-		low_colour = (255, 0, 0)
-		high_colour = (0, 0, 255)
+		low_colour = self.low_colour
+		high_colour = self.high_colour
 		colour = list(low_colour)
 		for i in range(3):
 			colour[i] += health_percent * (high_colour[i] - colour[i])

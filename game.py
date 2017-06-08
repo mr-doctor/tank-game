@@ -21,6 +21,7 @@ import factories
 from config import width, height, num_enemies, num_motherships, num_light_enemies, num_shotgunner_enemies, num_beamer_enemies
 import config
 
+
 class World:
 	
 	def __init__(self):
@@ -47,19 +48,13 @@ class World:
 		]
 
 	def spawn_enemies(self):
-		enemies = [factories.create_basic_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_enemies)]
-		motherships = [factories.create_mothership(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_motherships)]
-		light_enemies = [factories.create_light_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_light_enemies)]
-		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_shotgunner_enemies)]
-		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_beamer_enemies)]
-		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(config.num_scanner_enemies)]
+		enemies = [factories.create_basic_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_enemies)]
+		motherships = [factories.create_mothership(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_motherships)]
+		light_enemies = [factories.create_light_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_light_enemies)]
+		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_shotgunner_enemies)]
+		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_beamer_enemies)]
+		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(config.num_scanner_enemies)]
 		self.entities += (enemies + motherships + light_enemies + shotgunner_enemies + beamer_enemies + scanner_enemies)
-
-	def spawn_player(self):
-		if self.player.remove:
-			factories.create_player(Vector2(1, 1), self.chosen_weapons)
-			self.entities.append(self.player)
-
 
 
 class Game():
@@ -77,7 +72,7 @@ class Game():
 			(QUIT, None): sys.exit,
 			(KEYDOWN, K_q): pdb.set_trace,
 			(KEYDOWN, K_p): self.world.spawn_enemies,
-			(KEYDOWN, K_o): self.world.spawn_player,
+			(KEYDOWN, K_o): self.spawn_player,
 			(KEYDOWN, K_F11): self.fullscreen,
 			(KEYDOWN, K_SPACE): self.toggle_pause,
 			(KEYDOWN, K_RETURN): self.start,
@@ -115,7 +110,6 @@ class Game():
 					i -= 1
 				i += 1
 
-
 	def draw(self, screen):
 		screen.fill(self.background)
 		if not self.weapon_select:
@@ -132,7 +126,10 @@ class Game():
 		else:
 			self.draw_weapon_select(screen)
 
-
+	def spawn_player(self):
+		if self.world.player.remove:
+			self.world.player = factories.create_player(Vector2(1, 1), self.chosen_weapons)
+			self.world.entities.append(self.world.player)
 
 	def do_collisions(self):
 		for entity in self.world.entities:
@@ -166,7 +163,6 @@ class Game():
 			self.weapon_select = False
 			self.world.player = factories.create_player(Vector2(1, 1), self.chosen_weapons)
 			self.world.entities.append(self.world.player)
-
 
 
 if __name__ == '__main__':

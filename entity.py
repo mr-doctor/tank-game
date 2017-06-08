@@ -31,7 +31,7 @@ class Entity:
 	def collide(self, other):
 		if not other.hitscan:
 			return ((self.position + Vector2(self.width/2, self.height/2)) - (other.position + Vector2(other.width/2, other.height/2))).length() < \
-		         (self.collision_radius + other.collision_radius)
+				(self.collision_radius + other.collision_radius)
 		else:
 			other.collide(self)
 
