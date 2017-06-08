@@ -22,7 +22,7 @@ class Tank(Entity):
 		self.health = max_health
 		self.is_player = is_player
 		self.on_fire = False
-		self.fire_resist = 100
+		self.fire_resist = 150
 		self.fire_time = self.fire_resist
 
 		self.width = size
@@ -101,13 +101,12 @@ class Tank(Entity):
 				other.remove = True
 			flame_mod = 1
 			if other.projectile and other.flame:
-				if self.max_health > 30:
-					flame_mod = 0.2
 				self.on_fire = True
+				self.fire_time = 150
 			if other.explosive and not other.exploding:
 				other.explode()
 
-			self.health = max(self.health - ((other.damage + other.blast_damage) * flame_mod), 0)
+			self.health = max(self.health - (other.damage + other.blast_damage), 0)
 			if self.health <= 0:
 				for die_controller in self.controllers:
 					die_controller.die(self, other)
@@ -120,8 +119,12 @@ class Tank(Entity):
 			self.on_fire = False
 			self.fire_time = self.fire_resist
 		else:
-			self.health = max(self.health - 0.3, 0)
+			self.health = max(self.health - 0.1, 0)
 			if self.fire_time % 5 == 0:
 				flame = Flame(Vector2(random.uniform(self.position.x, self.position.x + self.width), random.uniform(self.position.y, self.position.y + self.height)),
 					self.direction.reflect(self.direction), self, damage=0, size=1, speed=3, is_flame=False)
 				self.spawn.append(flame)
+				if self.health <= 0:
+					for die_controller in self.controllers:
+						die_controller.die(self, flame)
+					flame.owner.kills += 1

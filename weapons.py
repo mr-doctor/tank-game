@@ -123,7 +123,7 @@ class Shotgun(Weapon):
 
 class MachineGun(Weapon):
 
-	def __init__(self, cooldown=4, max_deviation=10):
+	def __init__(self, cooldown=4, max_deviation=15):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
 
@@ -132,7 +132,7 @@ class MachineGun(Weapon):
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown -= 1
-		self.spread = max(self.spread - 0.05, 0)
+		self.spread = max(self.spread - 0.2, 0)
 
 		button1, button2, button3 = buttons
 
@@ -141,9 +141,8 @@ class MachineGun(Weapon):
 			bullet = Bullet(entity.position + Vector2(entity.width/2, entity.height/2), direction.rotate(random.uniform(-self.spread, self.spread)), entity,
 				damage=2, size=1, speed=12)
 			entity.spawn.append(bullet)
-			self.spread = min(self.spread + 0.5, self.max_deviation)
+			self.spread = min(self.spread + 1.2, self.max_deviation)
 			self.cooldown = self.max_cooldown
-
 
 	def draw(self, screen, x, y, active):
 		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
@@ -153,9 +152,10 @@ class MachineGun(Weapon):
 		name = my_font.render('Machine Gun (%d)' % self.spread, 1, (50, 255, 50))
 		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
+
 class SniperRifle(Weapon):
 
-	def __init__(self, cooldown=300):
+	def __init__(self, cooldown=200):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
 
@@ -169,7 +169,6 @@ class SniperRifle(Weapon):
 			    damage=40)
 			entity.spawn.append(shot)
 			self.cooldown = self.max_cooldown
-
 
 	def draw(self, screen, x, y, active):
 		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
@@ -192,11 +191,10 @@ class BeamGun(Weapon):
 
 		if button1 and self.cooldown <= 0:
 			beam = Beam(entity.position + Vector2(entity.width / 2, entity.height / 2), (target - entity.position).normalize(), entity,
-			            damage=9, colour=(20, 255, 100), width=5, range=200)
+					damage=9, colour=(20, 255, 100), width=5, range=200)
 			entity.spawn.append(beam)
 			self.cooldown += 2
 			self.cooldown = self.max_cooldown
-
 
 	def draw(self, screen, x, y, active):
 		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
@@ -205,6 +203,7 @@ class BeamGun(Weapon):
 		my_font = pygame.font.Font(None, 20)
 		name = my_font.render('Beam Gun', 1, (50, 255, 50))
 		pygame.Surface.blit(screen, name, (x + 3, y + 5))
+
 
 class Flamethrower(Weapon):
 
@@ -223,7 +222,7 @@ class Flamethrower(Weapon):
 		if button1 and self.cooldown <= 0:
 			target.rotate_ip(random.uniform(-self.spread, self.spread))
 			fire = Flame(entity.position + Vector2(entity.width/2, entity.height/2), (target - entity.position).normalize(), entity,
-				damage=0.8, size=3, speed=10)
+				damage=0.6, size=3, speed=10)
 			entity.spawn.append(fire)
 			self.cooldown = self.max_cooldown
 

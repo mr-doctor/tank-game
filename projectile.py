@@ -10,6 +10,7 @@ from entity import Entity
 
 from config import width, height
 
+
 class Projectile(Entity):
 	def __init__(self, position, direction, owner, damage, size, speed):
 		super().__init__(position, collision_radius=5)
@@ -79,7 +80,7 @@ class Flame(Projectile):
 
 	def update(self):
 		self.position += self.direction * self.speed
-		self.speed -= 0.4
+		self.speed -= 0.3
 		self.size += 1
 
 		if not (0 < self.position.x < width):
