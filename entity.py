@@ -14,7 +14,7 @@ class Entity:
 		self.to_add = []
 		self.spawn = []
 		self.controllers = []
-		self.ss = spritesheet.spritesheet(('Sprites.png', 'Basic Turret.png'))
+		# self.ss = spritesheet.spritesheet(('Sprites.png', 'Basic Turret.png'))
 		self.sprite_coords = sprite_coords
 		self.sprite = self.get_sprite()
 		self.rotated_sprite = self.sprite

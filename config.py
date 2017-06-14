@@ -2,18 +2,46 @@
 class Enemies:
 	health = 20
 
+
 class Player:
 	health = 80
 	max_secondary_bullets = 7
 
 width, height = 1920, 1080
-num_enemies = 0
-num_motherships = 0
-num_light_enemies = 0
-num_shotgunner_enemies = 0
-num_beamer_enemies = 0
-num_healer_enemies = 0
-num_scanner_enemies = 0
+
+
+class EasyDifficulty:
+	index = 0
+	num_enemies = 8
+	num_motherships = 2
+	num_light_enemies = 2
+	num_shotgunner_enemies = 1
+	num_beamer_enemies = 0
+	num_healer_enemies = 0
+	num_scanner_enemies = 0
+
+
+class NormalDifficulty:
+	index = 1
+	num_enemies = 8
+	num_motherships = 2
+	num_light_enemies = 2
+	num_shotgunner_enemies = 2
+	num_beamer_enemies = 1
+	num_healer_enemies = 0
+	num_scanner_enemies = 1
+
+
+class HardDifficulty:
+	index = 2
+	num_enemies = 8
+	num_motherships = 3
+	num_light_enemies = 5
+	num_shotgunner_enemies = 3
+	num_beamer_enemies = 2
+	num_healer_enemies = 0
+	num_scanner_enemies = 2
+
 #num_enemies = 0
 #num_motherships = 0
 #num_light_enemies = 0

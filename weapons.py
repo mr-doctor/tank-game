@@ -298,6 +298,7 @@ class MissileBarrage(Weapon):
 		name = my_font.render('Missile Barrage (%d%%)' % int((self.spread / self.max_deviation)*100), 1, (50, 255, 50))
 		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
+
 class GuidedMissileLauncher(Weapon):
 
 	def __init__(self, cooldown=150):

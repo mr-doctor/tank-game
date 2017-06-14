@@ -1,9 +1,9 @@
-#import the pygame module, and the
-#sys module for exiting the window we create
+# import the pygame module, and the
+# sys module for exiting the window we create
 import pygame, sys
 import random, pdb
 
-#import some useful constants
+# import some useful constants
 from pygame.locals import *
 from pygame import draw
 from pygame import gfxdraw
@@ -18,7 +18,7 @@ from projectile import Projectile
 from tank import Tank
 import factories
 
-from config import width, height, num_enemies, num_motherships, num_light_enemies, num_shotgunner_enemies, num_beamer_enemies
+from config import width, height
 import config
 
 
@@ -26,13 +26,8 @@ class World:
 	
 	def __init__(self):
 		self.player = None
-		enemies = [factories.create_basic_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_enemies)]
-		motherships = [factories.create_mothership(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_motherships)]
-		light_enemies = [factories.create_light_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_light_enemies)]
-		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in  range(num_shotgunner_enemies)]
-		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(num_beamer_enemies)]
-		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(0, width - 100), random.randint(0, height - 100))) for i in range(config.num_scanner_enemies)]
-		self.entities = (enemies + motherships + light_enemies + shotgunner_enemies + beamer_enemies + scanner_enemies)
+		self.difficulty = config.EasyDifficulty
+		self.entities = []
 
 		self.all_weapons = [
 			weapons.BasicGun(),
@@ -48,13 +43,16 @@ class World:
 		]
 
 	def spawn_enemies(self):
-		enemies = [factories.create_basic_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_enemies)]
-		motherships = [factories.create_mothership(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_motherships)]
-		light_enemies = [factories.create_light_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_light_enemies)]
-		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_shotgunner_enemies)]
-		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(num_beamer_enemies)]
-		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(config.num_scanner_enemies)]
-		self.entities += (enemies + motherships + light_enemies + shotgunner_enemies + beamer_enemies + scanner_enemies)
+		enemies = [factories.create_basic_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_enemies)]
+		motherships = [factories.create_mothership(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_motherships)]
+		light_enemies = [factories.create_light_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_light_enemies)]
+		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_shotgunner_enemies)]
+		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_beamer_enemies)]
+		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_scanner_enemies)]
+		return enemies + motherships + light_enemies + shotgunner_enemies + beamer_enemies + scanner_enemies
+
+	def add_enemies(self):
+		self.entities += self.spawn_enemies()
 
 
 class Game():
@@ -71,7 +69,7 @@ class Game():
 			(KEYDOWN, K_ESCAPE): sys.exit,
 			(QUIT, None): sys.exit,
 			(KEYDOWN, K_q): pdb.set_trace,
-			(KEYDOWN, K_p): self.world.spawn_enemies,
+			(KEYDOWN, K_p): self.world.add_enemies,
 			(KEYDOWN, K_o): self.spawn_player,
 			(KEYDOWN, K_F11): self.fullscreen,
 			(KEYDOWN, K_SPACE): self.toggle_pause,
@@ -80,6 +78,9 @@ class Game():
 
 		for i, key in enumerate([K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]):
 			self.keybinds[(KEYDOWN, key)] = self.choose_weapon(i)
+
+		for i, key in enumerate([K_z, K_x, K_c]):
+			self.keybinds[(KEYDOWN, key)] = self.choose_difficulty(i)
 
 	def update(self):
 
@@ -124,6 +125,7 @@ class Game():
 			for i, weapon in enumerate(self.world.player.weapons):
 				weapon.draw(screen, (i + 1)*130, 0, i == self.world.player.current_weapon)
 		else:
+			self.draw_difficulty_select(screen)
 			self.draw_weapon_select(screen)
 
 	def spawn_player(self):
@@ -141,6 +143,23 @@ class Game():
 		for i in range(10):
 			self.world.all_weapons[i].draw(screen, 100, (i + 1) * 50 + 20, self.chosen_weapons[i])
 
+	def draw_difficulty_select(self, screen):
+		for i in range(3):
+			if i == 0:
+				self.draw_box(screen, 300, (i + 1) * 50 + 20, self.world.difficulty.index == 0, 'EZ')
+			if i == 1:
+				self.draw_box(screen, 300, (i + 1) * 50 + 20, self.world.difficulty.index == 1, 'Normie')
+			if i == 2:
+				self.draw_box(screen, 300, (i + 1) * 50 + 20, self.world.difficulty.index == 2, 'Hard ;)')
+
+	def draw_box(self, screen, x, y, active, string):
+		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
+		if active:
+			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
+		my_font = pygame.font.Font(None, 20)
+		name = my_font.render(string, 1, (50, 255, 50))
+		pygame.Surface.blit(screen, name, (x + 7, y + 5))
+
 	def fullscreen(self):
 		pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 
@@ -154,8 +173,21 @@ class Game():
 
 		return choose
 
+	def choose_difficulty(self, num):
+		def choose():
+			if self.weapon_select:
+				if num == 0:
+					self.world.difficulty = config.EasyDifficulty
+				if num == 1:
+					self.world.difficulty = config.NormalDifficulty
+				if num == 2:
+					self.world.difficulty = config.HardDifficulty
+
+		return choose
+
 	def start(self):
 		num_weapons = 0
+		self.world.add_enemies()
 		for i in range(10):
 			if self.chosen_weapons[i]:
 				num_weapons += 1
