@@ -76,7 +76,7 @@ class BurstGun(Weapon):
 		if self.secondary_bullets_left > 0 and self.burst_cooldown <= 0:
 			direction = (target - entity.position).normalize()
 			bullet = Bullet(entity.position + Vector2(entity.width / 2, entity.height / 2), direction.rotate(random.uniform(-self.spread, self.spread)), entity,
-				damage=2.7, size=2, speed=13)
+				damage=2.5, size=2, speed=13)
 			entity.spawn.append(bullet)
 			self.secondary_bullets_left -= 1
 			self.burst_cooldown = self.max_burst_cooldown
@@ -191,7 +191,7 @@ class BeamGun(Weapon):
 
 		if button1 and self.cooldown <= 0:
 			beam = Beam(entity.position + Vector2(entity.width / 2, entity.height / 2), (target - entity.position).normalize(), entity,
-					damage=9, colour=(20, 255, 100), width=5, range=200)
+					damage=5, colour=(20, 255, 100), width=5, range=200)
 			entity.spawn.append(beam)
 			self.cooldown += 2
 			self.cooldown = self.max_cooldown

@@ -56,6 +56,8 @@ class HitScanner(Entity):
 
 	def hit(self, other):
 		other.health = max(other.health - self.damage, 0)
+		if isinstance(self, Beam):
+			other.on_fire = True
 		if other.health <= 0:
 			for die_controller in other.controllers:
 				die_controller.die(other, self)

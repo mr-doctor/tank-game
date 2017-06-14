@@ -17,7 +17,7 @@ def create_mothership(position):
 		controllers.BounceMoveController(speed=1), 
 		controllers.SpawnEnemyController(),
 		controllers.EnemyDieController()
-	], max_health=60, high_colour=(0, 255, 0), low_colour=(0, 100, 100), size=50, collision_radius=25)
+	], max_health=80, high_colour=(0, 255, 0), low_colour=(0, 100, 100), size=50, collision_radius=25)
 
 def create_light_enemy(position):
 	return Tank(position, [

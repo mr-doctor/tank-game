@@ -42,6 +42,10 @@ class BounceMoveController(Controller):
 
 	def __init__(self, speed=3):
 		self.speed = speed
+		self.speed_original = speed
+
+	def view_world(self, entity, world):
+		self.speed = self.speed_original * world.difficulty.speed_mod
 
 	def control(self, entity):
 		entity.position += entity.direction * self.speed
@@ -57,13 +61,15 @@ class PlayerHunterController(Controller):
 
 	def __init__(self, speed=2, sight_range=300, sprint=2):
 		self.speed = speed
+		self.speed_original = speed
 		self.sprint = sprint
 		self.sight = sight_range
 
 	def view_world(self, entity, world):
+		self.speed = self.speed_original * world.difficulty.speed_mod
 		if (entity.position - world.player.position).length() < self.sight:
 			self.player_position = Vector2(world.player.position)
-			self.speed = self.sprint
+			self.speed = self.sprint * world.difficulty.speed_mod
 		else:
 			self.player_position = None
 
@@ -108,6 +114,7 @@ class TargeterController(Controller):
 		self.speed = speed
 		self.target = target + Vector2(random.uniform(-deviation, deviation), random.uniform(-deviation, deviation))
 		self.target_position = self.target
+		self.speed_original = speed
 		self.total_distance = None
 		self.distance = self.total_distance
 		self.proportion = 0.01
@@ -115,6 +122,7 @@ class TargeterController(Controller):
 		self.start_direction = start_direction
 
 	def view_world(self, entity, world):
+		self.speed = self.speed_original * world.difficulty.speed_mod
 		if not self.total_distance:
 			self.total_distance = (self.target_position - entity.position).length()
 			self.distance = self.total_distance

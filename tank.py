@@ -22,7 +22,7 @@ class Tank(Entity):
 		self.health = max_health
 		self.is_player = is_player
 		self.on_fire = False
-		self.fire_resist = 150
+		self.fire_resist = 85
 		self.fire_time = self.fire_resist
 
 		self.width = size
@@ -92,6 +92,8 @@ class Tank(Entity):
 
 	def should_collide(self, other):
 		if (other.projectile or other.hitscan) and other.owner is not self:
+			if not other.owner.is_player and not self.is_player:
+				return False
 			return True
 		return False
 
