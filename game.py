@@ -43,17 +43,19 @@ class World:
 		]
 
 	def spawn_enemies(self):
-		enemies = [factories.create_basic_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_enemies)]
-		motherships = [factories.create_mothership(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_motherships)]
-		light_enemies = [factories.create_light_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_light_enemies)]
-		shotgunner_enemies = [factories.create_shotgunner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_shotgunner_enemies)]
-		beamer_enemies = [factories.create_beamer_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_beamer_enemies)]
-		scanner_enemies = [factories.create_scanner_enemy(Vector2(random.randint(100, width - 100), random.randint(100, height - 100))) for i in range(self.difficulty.num_scanner_enemies)]
+		enemies = [factories.create_basic_enemy(self.bounds()) for i in range(self.difficulty.num_enemies)]
+		motherships = [factories.create_mothership(self.bounds()) for i in range(self.difficulty.num_motherships)]
+		light_enemies = [factories.create_light_enemy(self.bounds()) for i in range(self.difficulty.num_light_enemies)]
+		shotgunner_enemies = [factories.create_shotgunner_enemy(self.bounds()) for i in range(self.difficulty.num_shotgunner_enemies)]
+		beamer_enemies = [factories.create_beamer_enemy(self.bounds()) for i in range(self.difficulty.num_beamer_enemies)]
+		scanner_enemies = [factories.create_scanner_enemy(self.bounds()) for i in range(self.difficulty.num_scanner_enemies)]
 		return enemies + motherships + light_enemies + shotgunner_enemies + beamer_enemies + scanner_enemies
 
 	def add_enemies(self):
 		self.entities += self.spawn_enemies()
 
+	def bounds(self):
+		return Vector2(random.randint(100, width - 100), random.randint(100, height - 100))
 
 class Game():
 	def __init__(self):

@@ -34,13 +34,13 @@ class NormalDifficulty:
 
 class HardDifficulty:
 	index = 2
-	num_enemies = 8
-	num_motherships = 3
+	num_enemies = 10
+	num_motherships = 4
 	num_light_enemies = 5
-	num_shotgunner_enemies = 3
-	num_beamer_enemies = 2
+	num_shotgunner_enemies = 4
+	num_beamer_enemies = 4
 	num_healer_enemies = 0
-	num_scanner_enemies = 2
+	num_scanner_enemies = 3
 
 #num_enemies = 0
 #num_motherships = 0

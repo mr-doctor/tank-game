@@ -16,6 +16,7 @@ from config import Player
 import factories
 from weapons import SniperRifle, MissileBarrage
 
+
 class Controller:
 
 	def view_world(self, entity, world):
@@ -27,6 +28,7 @@ class Controller:
 	def die(self, entity, killer):
 		pass
 
+
 class EnemyDieController(Controller):
 
 	def __init__(self):
@@ -37,6 +39,7 @@ class EnemyDieController(Controller):
 			health_pack = factories.create_health_pack(entity.position)
 			entity.spawn.append(health_pack)
 		entity.remove = True
+
 
 class BounceMoveController(Controller):
 
@@ -52,6 +55,7 @@ class BounceMoveController(Controller):
 		if not (0 < entity.position.y < height - entity.height):
 			entity.position.y -= entity.direction.y * self.speed
 			entity.direction.y *= -1
+
 
 class PlayerHunterController(Controller):
 
@@ -80,6 +84,7 @@ class PlayerHunterController(Controller):
 			entity.position.y -= entity.direction.y * self.speed
 			entity.direction.y *= -1
 
+
 class EnemyHunterController(Controller):
 
 	def __init__(self, target, speed=8):
@@ -101,6 +106,7 @@ class EnemyHunterController(Controller):
 
 		if self.target_position:
 			entity.direction = (self.target_position - entity.position).normalize()
+
 
 class TargeterController(Controller):
 
@@ -129,6 +135,7 @@ class TargeterController(Controller):
 
 		entity.position += entity.direction * self.speed
 
+
 class BasicTargetingController(Controller):
 
 	def __init__(self, min_fire_time=60, max_fire_time=140, fire_range=200):
@@ -153,6 +160,7 @@ class BasicTargetingController(Controller):
 			entity.spawn.append(bullet)
 			self.fire_cooldown = random.randint(self.min_fire_time, self.max_fire_time)
 
+
 class LightTargetingController(Controller):
 
 	def __init__(self, fire_cooldown=5, fire_range=250):
@@ -173,6 +181,7 @@ class LightTargetingController(Controller):
 			bullet = Bullet(entity.position, bullet_direction, entity, damage=1, size=1, speed=12)
 			entity.spawn.append(bullet)
 			self.fire_cooldown = self.max_fire_cooldown
+
 
 class ShotgunTargetingController(Controller):
 
@@ -200,6 +209,7 @@ class ShotgunTargetingController(Controller):
 				entity.spawn.append(pellet)
 			self.fire_cooldown = self.max_fire_cooldown
 
+
 class EnemyHealerController(Controller):
 
 	def __init__(self, heal_radius=300):
@@ -217,6 +227,7 @@ class EnemyHealerController(Controller):
 	def control(self, entity):
 		for patient in self.patients:
 			patient.health += 0.02
+
 
 class EnemyScannerController(Controller):
 
@@ -239,6 +250,7 @@ class EnemyScannerController(Controller):
 			for enemy in self.world_entities:
 				if type(enemy) is Tank and not enemy.is_player and (entity.position - enemy.position).length() < self.range:
 					enemy.direction = (self.player_position - enemy.position).normalize()
+
 
 class BeamTargetingController(Controller):
 
@@ -271,6 +283,7 @@ class BeamTargetingController(Controller):
 			self.damage = min(self.damage + 4, self.max_damage)
 			self.fire_cooldown = self.max_fire_cooldown
 
+
 class SpawnEnemyController(Controller):
 
 	def __init__(self, spawn_time=180):
@@ -284,6 +297,7 @@ class SpawnEnemyController(Controller):
 			enemy = factories.create_basic_enemy(entity.position)
 			entity.spawn.append(enemy)
 			self.spawn_cooldown = self.spawn_time
+
 
 class PlayerController(Controller):
 
@@ -355,8 +369,6 @@ class PlayerController(Controller):
 			return entity.position + (target_dir).normalize()
 		else:
 			return entity.position + (target_dir).normalize() * 1000
-
-
 
 	def die(self, entity, killer):
 		entity.remove = True
