@@ -76,6 +76,7 @@ class Game():
 			(KEYDOWN, K_F11): self.fullscreen,
 			(KEYDOWN, K_SPACE): self.toggle_pause,
 			(KEYDOWN, K_RETURN): self.start,
+			(KEYDOWN, K_BACKSPACE): self.menu,
 		}
 
 		for i, key in enumerate([K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]):
@@ -186,6 +187,11 @@ class Game():
 					self.world.difficulty = config.HardDifficulty
 
 		return choose
+
+	def menu(self):
+		self.world.entities = []
+		self.world.player = None
+		self.weapon_select = True
 
 	def start(self):
 		num_weapons = 0

@@ -15,14 +15,14 @@ from projectile import Projectile, Flame
 import config
 
 class Tank(Entity):
-	def __init__(self, position, controllers, size=20, max_health=20, high_colour=(255, 0, 0), low_colour=(100, 0, 100), collision_radius=10, weapons=[], is_player =False,
-	             sprite_coords=((0, 0, 40, 40), (40, 0, 40, 40),(0, 255, 0))):
+	def __init__(self, position, controllers, size=20, max_health=20, high_colour=(255, 0, 0), low_colour=(100, 0, 100),
+				collision_radius=10, weapons=[], is_player =False, sprite_coords=((0, 0, 40, 40), (40, 0, 40, 40),(0, 255, 0))):
 		super().__init__(position, sprite_coords=sprite_coords, collision_radius=collision_radius)
 		self.direction = Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
 		self.health = max_health
 		self.is_player = is_player
 		self.on_fire = False
-		self.fire_resist = 150
+		self.fire_resist = 85
 		self.fire_time = self.fire_resist
 
 		self.width = size
@@ -92,6 +92,8 @@ class Tank(Entity):
 
 	def should_collide(self, other):
 		if (other.projectile or other.hitscan) and other.owner is not self:
+			if not other.owner.is_player and not self.is_player:
+				return False
 			return True
 		return False
 
