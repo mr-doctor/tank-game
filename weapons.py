@@ -18,18 +18,25 @@ from config import Player
 
 class Weapon:
 
-	def control(self, entity, target, buttons):
+	def control(self, entity, target, point, buttons):
 		pass
 
 	def draw(self, screen, x, y, active):
-		pass
+		width = 140
+		draw.rect(screen, (80, 0, 0), (x, y, width, 20))
+		if active:
+			draw.rect(screen, (255, 0, 0), (x, y, width, 20))
+		my_font = pygame.font.Font(None, 20)
+		name = my_font.render(self.name, 1, (50, 255, 50))
+		pygame.Surface.blit(screen, name, (x + 7, y + 5))
 
 
 class BasicGun(Weapon):
 
-	def __init__(self, cooldown=40):
+	def __init__(self, cooldown=50):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
+		self.name = 'Basic Gun'
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown -= 1
@@ -37,17 +44,11 @@ class BasicGun(Weapon):
 		button1, button2, button3 = buttons
 		
 		if button1 and self.cooldown <= 0:
-			bullet = Bullet(entity.position + Vector2(entity.width / 2, entity.height / 2), (target - entity.position).normalize(), entity, damage=9, size=5)
+			bullet = Bullet(entity.position + Vector2(entity.width / 2, entity.height / 2), (target - entity.position).normalize(), entity, damage=10, size=5)
 			entity.spawn.append(bullet)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Basic Gun', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 7, y + 5))
+
 
 
 class BurstGun(Weapon):
@@ -62,6 +63,7 @@ class BurstGun(Weapon):
 		self.spread = burst_deviation
 
 		self.secondary_bullets_left = 0
+		self.name = 'Burst Gun'
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown -= 1
@@ -81,14 +83,6 @@ class BurstGun(Weapon):
 			self.secondary_bullets_left -= 1
 			self.burst_cooldown = self.max_burst_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Burst Gun', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 7, y + 5))
-
 
 class Shotgun(Weapon):
 
@@ -98,6 +92,8 @@ class Shotgun(Weapon):
 
 		self.spread = spread
 		self.pellets = pellets
+
+		self.name = 'Shotgun'
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown -= 1
@@ -112,23 +108,17 @@ class Shotgun(Weapon):
 				entity.spawn.append(pellet)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Shotgun', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 7, y + 5))
-
 
 class MachineGun(Weapon):
 
-	def __init__(self, cooldown=4, max_deviation=15):
+	def __init__(self, cooldown=4, max_deviation=10):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
 
-		self.spread = 2
+		self.spread = 0
 		self.max_deviation = max_deviation
+
+		self.name = 'Machine Gun (%d%%)' % int((self.spread / self.max_deviation) * 100)
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown -= 1
@@ -139,18 +129,10 @@ class MachineGun(Weapon):
 		if button1 and self.cooldown <= 0:
 			direction = (target - entity.position).normalize()
 			bullet = Bullet(entity.position + Vector2(entity.width/2, entity.height/2), direction.rotate(random.uniform(-self.spread, self.spread)), entity,
-				damage=2, size=1, speed=12)
+				damage=1.5, size=1, speed=12)
 			entity.spawn.append(bullet)
 			self.spread = min(self.spread + 1.2, self.max_deviation)
 			self.cooldown = self.max_cooldown
-
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Machine Gun (%d)' % self.spread, 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
 
 class SniperRifle(Weapon):
@@ -158,6 +140,7 @@ class SniperRifle(Weapon):
 	def __init__(self, cooldown=200):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
+		self.name = 'Sniper Rifle (%d)' % self.cooldown
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown = max(self.cooldown - 1, 0)
@@ -170,19 +153,13 @@ class SniperRifle(Weapon):
 			entity.spawn.append(shot)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Sniper Rifle (%d)' % self.cooldown, 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
 class BeamGun(Weapon):
 
-	def __init__(self, cooldown=37):
+	def __init__(self, cooldown=1):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
+		self.name = 'Beam Gun'
 
 	def control(self, entity, target, point, buttons):
 		self.cooldown = max(self.cooldown - 1, 0)
@@ -191,27 +168,21 @@ class BeamGun(Weapon):
 
 		if button1 and self.cooldown <= 0:
 			beam = Beam(entity.position + Vector2(entity.width / 2, entity.height / 2), (target - entity.position).normalize(), entity,
-					damage=5, colour=(20, 255, 100), width=5, range=200)
+					damage=1, colour=(20, 255, 100), width=5, range=200)
 			entity.spawn.append(beam)
 			self.cooldown += 2
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Beam Gun', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
-
 
 class Flamethrower(Weapon):
 
-	def __init__(self, cooldown=5, max_deviation=4):
+	def __init__(self, cooldown=3, max_deviation=4):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
 
 		self.spread = max_deviation
+
+		self.name = 'Flamethrower'
 
 	def control(self, entity, target, point, buttons):
 
@@ -226,19 +197,13 @@ class Flamethrower(Weapon):
 			entity.spawn.append(fire)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Flamethrower', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
 class RocketLauncher(Weapon):
 
 	def __init__(self, cooldown=80):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
+		self.name = 'Rocket Launcher'
 
 	def control(self, entity, target, point, buttons):
 
@@ -251,13 +216,6 @@ class RocketLauncher(Weapon):
 			entity.spawn.append(rocket)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Rocket Launcher', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
 
 class MissileBarrage(Weapon):
 
@@ -266,6 +224,8 @@ class MissileBarrage(Weapon):
 		self.cooldown = 0
 		self.spread = 0
 		self.max_deviation = 150
+
+		self.name = 'Missile Barrage (%d%%)' % int((self.spread / self.max_deviation)*100)
 
 	def control(self, entity, target, point, buttons):
 
@@ -290,20 +250,13 @@ class MissileBarrage(Weapon):
 			self.spread = min(self.spread + 2.5, self.max_deviation)
 			self.cooldown = self.max_cooldown
 
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Missile Barrage (%d%%)' % int((self.spread / self.max_deviation)*100), 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
-
 
 class GuidedMissileLauncher(Weapon):
 
 	def __init__(self, cooldown=150):
 		self.max_cooldown = cooldown
 		self.cooldown = 0
+		self.name = 'Guided Missile'
 
 	def control(self, entity, target, point, buttons):
 
@@ -315,11 +268,3 @@ class GuidedMissileLauncher(Weapon):
 			rocket = GuidedMissile(entity.position + Vector2(entity.width / 2, entity.height / 2), EnemyHunterController(target=point), (target - entity.position).normalize(), entity)
 			entity.spawn.append(rocket)
 			self.cooldown = self.max_cooldown
-
-	def draw(self, screen, x, y, active):
-		draw.rect(screen, (80, 0, 0), (x, y, 110, 20))
-		if active:
-			draw.rect(screen, (255, 0, 0), (x, y, 110, 20))
-		my_font = pygame.font.Font(None, 20)
-		name = my_font.render('Guided Missile', 1, (50, 255, 50))
-		pygame.Surface.blit(screen, name, (x + 3, y + 5))
