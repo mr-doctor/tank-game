@@ -192,6 +192,7 @@ class Game():
 		self.world.entities = []
 		self.world.player = None
 		self.weapon_select = True
+		self.toggle_pause()
 
 	def start(self):
 		num_weapons = 0

@@ -379,4 +379,5 @@ class PlayerController(Controller):
 			return entity.position + (target_dir).normalize() * 1000
 
 	def die(self, entity, killer):
+		entity.position = Vector2(-1000, -1000)
 		entity.remove = True
