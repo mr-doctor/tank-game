@@ -121,6 +121,7 @@ class MachineGun(Weapon):
 		self.name = 'Machine Gun (%d%%)' % int((self.spread / self.max_deviation) * 100)
 
 	def control(self, entity, target, point, buttons):
+		self.name = 'Machine Gun (%d%%)' % int((self.spread / self.max_deviation) * 100)
 		self.cooldown -= 1
 		self.spread = max(self.spread - 0.2, 0)
 
@@ -143,6 +144,7 @@ class SniperRifle(Weapon):
 		self.name = 'Sniper Rifle (%d)' % self.cooldown
 
 	def control(self, entity, target, point, buttons):
+		self.name = 'Sniper Rifle (%d)' % self.cooldown
 		self.cooldown = max(self.cooldown - 1, 0)
 
 		button1, button2, button3 = buttons
@@ -228,6 +230,7 @@ class MissileBarrage(Weapon):
 		self.name = 'Missile Barrage (%d%%)' % int((self.spread / self.max_deviation)*100)
 
 	def control(self, entity, target, point, buttons):
+		self.name = 'Missile Barrage (%d%%)' % int((self.spread / self.max_deviation) * 100)
 
 		from controllers import TargeterController
 
